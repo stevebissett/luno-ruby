@@ -1,76 +1,72 @@
 module PublicApi
 
   def ticker(pair)
-    t = self.get('/api/1/ticker', {pair: pair})
+    ticker = self.get('/api/1/ticker', {pair: pair})
     {
       pair: pair,
-      timestamp: Time.at(t['timestamp'].to_i/1000),
-      ask: BigDecimal(t['ask']),
-      bid: BigDecimal(t['bid']),
-      last: BigDecimal(t['last_trade']),
-      volume: t['rolling_24_hour_volume']
+      timestamp: time(ticker['timestamp']),
+      ask: BigDecimal(ticker['ask']),
+      bid: BigDecimal(ticker['bid']),
+      last: BigDecimal(ticker['last_trade']),
+      volume: BigDecimal(ticker['rolling_24_hour_volume'])
     }
   end
 
   def tickers
-    tickers = []
-    self.get('/api/1/tickers')['tickers'].each do |t|
-      tickers << {
-        pair: t['pair'],
-        timestamp: Time.at(t['timestamp'].to_i/1000),
-        ask: BigDecimal(t['ask']),
-        bid: BigDecimal(t['bid']),
-        last: BigDecimal(t['last_trade']),
-        volume: t['rolling_24_hour_volume']
+    self.get('/api/1/tickers')['tickers'].map do |ticker|
+      {
+        pair: ticker['pair'],
+        timestamp: time(ticker['timestamp']),
+        ask: BigDecimal(ticker['ask']),
+        bid: BigDecimal(ticker['bid']),
+        last: BigDecimal(ticker['last_trade']),
+        volume: BigDecimal(ticker['rolling_24_hour_volume'])
       }
     end
-    tickers
   end
 
   def orderbook(pair)
-    t = self.get('/api/1/orderbook', {pair: pair})
-    bids = []
-    t['bids'].each do |o|
-      bids << {
-        price: BigDecimal(o['price']),
-        volume: BigDecimal(o['volume'])
+    response = self.get('/api/1/orderbook', {pair: pair})
+    bids = response['bids'].map do |order|
+      {
+        price: BigDecimal(order['price']),
+        volume: BigDecimal(order['volume'])
       }
     end
 
-    asks = []
-    t['asks'].each do |o|
-      asks << {
-        price: BigDecimal(o['price']),
-        volume: BigDecimal(o['volume'])
+    asks = response['asks'].map do |order|
+      {
+        price: BigDecimal(order['price']),
+        volume: BigDecimal(order['volume'])
       }
     end
 
-    {bids: bids, asks: asks, timestamp: Time.at(t['timestamp'].to_i/1000)}
+    {bids: bids, asks: asks, timestamp: time(response['timestamp'])}
   end
 
   def trades(pair)
-    t = self.get('/api/1/trades', {pair: pair})
-    trades = []
-    t['trades'].each do |trade|
-      trades << {
-        timestamp: Time.at(trade['timestamp'].to_i/1000),
+    response = self.get('/api/1/trades', {pair: pair})
+    response['trades'].map do |trade|
+      {
+        timestamp: time(trade['timestamp']),
         price: BigDecimal(trade['price']),
         volume: BigDecimal(trade['volume'])
       }
     end
-    trades
   end
 
   def get(url, params=nil)
-    r = self.conn.get(url, params)
-    if r.status != 200
-      raise ::BitX::Error.new("BitX error: #{r.status}")
-    end
-    t = JSON.parse r.body
-    if t['error']
-      raise ::BitX::Error.new('BitX error: ' + t['error'])
-    end
-    t
+    response = self.conn.get(url, params)
+    response_body = Oj.load(response.body, mode: :compat)
+    raise ::BitX::Error.new("BitX error: #{response.status}") if response.status != 200
+    raise ::BitX::Error.new("BitX error: #{response_body['error']}") if response_body['error']
+    response_body
+  end
+
+  private
+
+  def time(epoch_time)
+    Time.at(epoch_time.to_i/1000)
   end
 
 end

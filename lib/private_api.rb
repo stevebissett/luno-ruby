@@ -15,8 +15,8 @@ module PrivateApi
     opt.merge!({asset: asset})
     path = '/api/1/balance'
     j = authed_request(path, {params: opt})
-    balance = BigDecimal(j[:balance][0][:balance])
-    reserved = BigDecimal(j[:balance][0][:reserved])
+    balance = BigDecimal(j[:balance].first[:balance])
+    reserved = BigDecimal(j[:balance].first[:reserved])
     {
       asset:      asset,
       balance:    balance,
