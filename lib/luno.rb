@@ -6,7 +6,7 @@ require_relative 'public_api'
 require_relative 'private_api'
 require_relative 'version'
 
-module BitX
+module Luno
   class Configuration
     attr_accessor :api_key_id, :api_key_secret, :api_key_pin
   end
@@ -26,13 +26,13 @@ module BitX
   extend PrivateApi
 
   def self.set_conn(conn=nil)
-    @conn = conn || BitX.conn
+    @conn = conn || Luno.conn
   end
 
   def self.conn
     return @conn if @conn
     @conn = Faraday.new(url: 'https://api.mybitx.com')
-    @conn.headers[:user_agent] = "bitx-ruby/#{BitX::VERSION::STRING}"
+    @conn.headers[:user_agent] = "luno-ruby/#{Luno::VERSION::STRING}"
     @conn
   end
 
@@ -44,8 +44,8 @@ module BitX
     attr_accessor :configuration, :conn
 
     def initialize(connection=nil)
-      @conn = connection || BitX.conn
-      @configuration = BitX.configuration
+      @conn = connection || Luno.conn
+      @configuration = Luno.configuration
       yield(@configuration) if block_given?
     end
 

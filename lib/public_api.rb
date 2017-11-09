@@ -57,9 +57,9 @@ module PublicApi
 
   def get(url, params=nil)
     response = self.conn.get(url, params)
-    response_body = Oj.load(response.body, mode: :compat)
-    raise ::BitX::Error.new("BitX error: #{response.status}") if response.status != 200
-    raise ::BitX::Error.new("BitX error: #{response_body['error']}") if response_body['error']
+    response_body = JSON.parse(response.body)
+    raise ::Luno::Error.new("Luno error: #{response.status}") if response.status != 200
+    raise ::Luno::Error.new("Luno error: #{response_body['error']}") if response_body['error']
     response_body
   end
 

@@ -1,10 +1,10 @@
-# BitX Ruby
+# Luno Ruby
 
-Ruby wrapper for the BitX API.
+Ruby wrapper for the Luno API (formerly BitX).
 
 ## Rate limits
 
-If rate limits are exceeded BitX will return a 429 error. Make sure your code handles that appropriately.
+If rate limits are exceeded the Luno/BitX API will return a 429 error. Make sure your code handles that appropriately.
 
 ## Installation
 
@@ -23,7 +23,7 @@ Or install it yourself as:
 ## Usage
 
 ```
-require 'bitx'
+require 'luno'
 
 ```
 Public API usage
@@ -31,13 +31,13 @@ Public API usage
 ```
 
 # Fetch the ticker
-BitX.ticker('XBTZAR')
+Luno.ticker('XBTZAR')
 
 # Fetch the order book
-BitX.orderbook('XBTZAR')
+Luno.orderbook('XBTZAR')
 
 # Fetch the latest trades
-BitX.trades('XBTZAR')
+Luno.trades('XBTZAR')
 
 ```
 
@@ -45,27 +45,27 @@ Private API usage
 
 ```
 # In a configure block somewhere in your app init:
-BitX.configure do |config|
+Luno.configure do |config|
   config.api_key_secret = 'yoursecretkeyfrombitx'
   config.api_key_id = 'yourapiidfrombitx'
   config.api_key_pin = 'yourapikeypinfrombitx'
 end
 
 # Your Balances
-BitX.balance
+Luno.balance
 
 # List your orders trading Bitcoin for Rand
-BitX.list_orders 'XBTZAR'
+Luno.list_orders 'XBTZAR'
 
 # Place a new order
-# BitX::ORDERTYPE_BID / BitX::ORDERTYPE_ASK
+# Luno::ORDERTYPE_BID / Luno::ORDERTYPE_ASK
 volume = '0.01'
 price = '10000'
-BitX.post_order(BitX::ORDERTYPE_BID, volume, price, 'XBTZAR')
+Luno.post_order(Luno::ORDERTYPE_BID, volume, price, 'XBTZAR')
 
 
 #alternatively, if you need to change the api_key during the program you can pass options to the private methods specifying the :api_key_secret and :api_key_id
-BitX.balance_for('XBT', {api_key_secret: 'yoursecretkeyfrombitx', api_key_id: 'yourapiidfrombitx'})
+Luno.balance_for('XBT', {api_key_secret: 'yoursecretkeyfrombitx', api_key_id: 'yourapiidfrombitx'})
 
 
 
@@ -76,19 +76,19 @@ BitX.balance_for('XBT', {api_key_secret: 'yoursecretkeyfrombitx', api_key_id: 'y
 Connection object
 
 ```
-  # if you need to access the BitX api with different credentials in a concurrent system, you can use the BitX::Connection object
+  # if you need to access the Luno api with different credentials in a concurrent system, you can use the Luno::Connection object
 
   #if config changes:
-  bit_x = BitX::Connection.new() do |config|
+  luno = Luno::Connection.new() do |config|
     config.api_key_secret = 'yoursecretkeyfrombitx'
     config.api_key_id = 'yourapiidfrombitx'
     config.api_key_pin = 'yourapikeypinfrombitx'
   end
-  bit_x.balance
+  luno.balance
 
   #if you want to use a mocked connection
-  bitx = BitX::Connection.new(stubbed_connection)
-  bitx.tickers
+  luno = Luno::Connection.new(stubbed_connection)
+  luno.tickers
 
 
 ```

@@ -1,6 +1,6 @@
 require "minitest/pride"
 require "minitest/autorun"
-require_relative "../lib/bitx.rb"
+require_relative "../lib/luno.rb"
 
   module BalanceStubs
     def self.conn
@@ -37,9 +37,9 @@ require_relative "../lib/bitx.rb"
   class TestBalance < Minitest::Test
 
     def test_balance
-      BitX.set_conn(BalanceStubs.conn)
+      Luno.set_conn(BalanceStubs.conn)
 
-      r = BitX.balance
+      r = Luno.balance
       assert_equal r.first[:reserved], 0.01
       assert_equal r.first[:available], r.first[:balance] - r.first[:reserved]
       assert_equal r.first[:unconfirmed], 0.421
@@ -48,7 +48,7 @@ require_relative "../lib/bitx.rb"
     end
 
     def test_connection_balance
-      r = BitX::Connection.new(BalanceStubs.conn).balance
+      r = Luno::Connection.new(BalanceStubs.conn).balance
       assert_equal r.first[:reserved], 0.01
       assert_equal r.first[:available], r.first[:balance] - r.first[:reserved]
       assert_equal r.first[:unconfirmed], 0.421

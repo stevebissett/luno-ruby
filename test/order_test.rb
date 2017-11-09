@@ -1,6 +1,6 @@
 require "minitest/pride"
 require "minitest/autorun"
-require_relative "../lib/bitx.rb"
+require_relative "../lib/luno.rb"
 
   module OrderStubs
     def self.conn
@@ -77,10 +77,11 @@ require_relative "../lib/bitx.rb"
   class TestOrders < Minitest::Test
 
     def setup_module
-      BitX.set_conn(OrderStubs.conn)
+      Luno.set_conn(OrderStubs.conn)
     end
+
     def setup_connection
-      BitX::Connection.new(OrderStubs.conn)
+      Luno::Connection.new(OrderStubs.conn)
     end
 
     def test_connection_list
@@ -89,7 +90,7 @@ require_relative "../lib/bitx.rb"
     end
     def test_list
       setup_module
-      r = BitX.list_orders('XBTZAR')
+      r = Luno.list_orders('XBTZAR')
       assert_equal r.size, 1
     end
 
@@ -100,7 +101,7 @@ require_relative "../lib/bitx.rb"
     end
     def test_post_order
       setup_module
-      r = BitX.post_order('BID', 0.1, 1000, 'XBTZAR')
+      r = Luno.post_order('BID', 0.1, 1000, 'XBTZAR')
       assert_equal r[:order_id], 'BXRANDOMORDERID23'
     end
 
@@ -111,7 +112,7 @@ require_relative "../lib/bitx.rb"
     end
     def test_get_order
       setup_module
-      r = BitX.get_order('BXHW6PFRRXKFSB4')
+      r = Luno.get_order('BXHW6PFRRXKFSB4')
       assert_equal r[:order_id], 'BXHW6PFRRXKFSB4'
     end
 
@@ -121,7 +122,7 @@ require_relative "../lib/bitx.rb"
     end
     def test_stop_order
       setup_module
-      r = BitX.stop_order('BXMC2CJ7HNB88U4')
+      r = Luno.stop_order('BXMC2CJ7HNB88U4')
       assert_equal r[:success], true
     end
 

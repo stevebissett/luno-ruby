@@ -5,13 +5,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require_relative 'lib/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "bitx"
-  spec.version       = BitX::VERSION::STRING.dup
-  spec.authors       = ["Timothy Stranex","Francois Paul"]
-  spec.email         = ["timothy@bitx.co","franc@bitx.co"]
-  spec.description   = 'BitX API wrapper'
-  spec.summary       = 'Ruby wrapper for the BitX API'
-  spec.homepage      = "https://bitx.co/api"
+  spec.name          = "luno"
+  spec.version       = Luno::VERSION::STRING.dup
+  spec.authors       = ["Timothy Stranex","Francois Paul", "Steve Bissett"]
+  spec.email         = ["timothy@bitx.co","franc@bitx.co", "steve.bissett@gmail.com"]
+  spec.description   = 'Luno API wrapper (formerly Luno)'
+  spec.summary       = 'Ruby wrapper for the Luno API'
+  spec.homepage      = "https://luno.com/api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -23,4 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "minitest"
   spec.add_runtime_dependency 'faraday'
+  spec.add_runtime_dependency 'oj'
+
 end
