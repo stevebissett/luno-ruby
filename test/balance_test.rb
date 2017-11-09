@@ -28,9 +28,7 @@ require_relative "../lib/luno.rb"
 
       end
 
-      Faraday.new do |faraday|
-        faraday.adapter :test, stubs
-      end
+      Faraday.new { |faraday| faraday.adapter :test, stubs }
     end
   end
 

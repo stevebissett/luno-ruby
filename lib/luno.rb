@@ -36,7 +36,6 @@ module Luno
     @conn
   end
 
-
   #connection object to be used in concurrent systems where connections and configurations might differ
   class Connection
     include PublicApi
